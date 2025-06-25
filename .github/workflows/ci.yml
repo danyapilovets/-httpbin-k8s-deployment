@@ -1,0 +1,35 @@
+---
+name: CI
+
+on:
+  push:
+    branches: [ main ]
+  pull_request: {}
+
+jobs:
+  yaml-lint:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.10'
+      - run: pip install yamllint
+      - run: yamllint .
+
+  helm-lint:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: ./apps/httpbin/.github/helm-lint
+        with:
+          chart-path: apps/httpbin/.helm/httbin-chart
+
+  kustomize-build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: ./k8s/httpbin-cluster/.github/kustomize-check
+        with:
+          kustomize-path: k8s/httpbin-cluster/environments
+

@@ -1,0 +1,8 @@
+---
+extends: default
+
+# Exclude Helm chart templates and packaged archives from linting
+ignore: |
+  apps/httpbin/.helm/**
+  apps/httpbin/.charts/**
+  .github/workflows/ci.yml

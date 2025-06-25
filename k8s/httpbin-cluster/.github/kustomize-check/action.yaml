@@ -1,0 +1,25 @@
+---
+name: Kustomize Build Check
+description: Run kustomize build to verify manifests compile
+
+inputs:
+  kustomize-path:
+    description: Path to directory with kustomization.yaml
+    required: true
+
+runs:
+  using: "composite"
+  steps:
+    - name: Install kustomize
+      shell: bash
+      run: |
+        URL_BASE="https://github.com/kubernetes-sigs/kustomize/releases/download"
+        URL_PATH="kustomize%2Fv5.4.1/kustomize_v5.4.1_linux_amd64.tar.gz"
+        curl -sLo kustomize.tgz "$URL_BASE/$URL_PATH"
+        tar -xzf kustomize.tgz
+        sudo mv kustomize /usr/local/bin/
+
+    - name: kustomize build
+      shell: bash
+      run: |
+        kustomize build "${{ inputs.kustomize-path }}" >/dev/null

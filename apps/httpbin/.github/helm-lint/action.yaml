@@ -1,0 +1,21 @@
+---
+name: Helm Lint
+description: Run helm lint for provided chart path
+
+inputs:
+  chart-path:
+    description: Relative path to the Helm chart
+    required: true
+
+runs:
+  using: "composite"
+  steps:
+    - name: Set up Helm
+      uses: azure/setup-helm@v4
+      with:
+        version: v3.14.4
+
+    - name: Helm lint
+      shell: bash
+      run: |
+        helm lint "${{ inputs.chart-path }}"
